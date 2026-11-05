@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherAI - Smart Weather Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>🌦️ WeatherAI</h1>
+        <p>Smart Weather Tracking System</p>
+    </header>
+
+    <main>
+        <section class="search">
+            <input
+                type="text"
+                id="cityInput"
+                placeholder="Enter city name..."
+            >
+            <button id="searchBtn">Search</button>
+        </section>
+
+        <p id="message">Search for a city to see its weather.</p>
+
+        <section id="weather" class="weather-card" hidden>
+            <h2 id="cityName"></h2>
+            <div id="weatherIcon">🌤️</div>
+            <h1 id="temperature"></h1>
+            <p id="description"></p>
+
+            <div class="details">
+                <div>
+                    <h3>Humidity</h3>
+                    <p id="humidity"></p>
+                </div>
+                <div>
+                    <h3>Wind Speed</h3>
+                    <p id="wind"></p>
+                </div>
+                <div>
+                    <h3>Feels Like</h3>
+                    <p id="feels"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="forecastSection" hidden>
+            <h2>7-Day Forecast</h2>
+            <div id="forecast" class="forecast"></div>
+        </section>
+        
+<section id="analytics" hidden>
+    <h2>📊 Weather Analytics</h2>
+
+    <div class="chart-card">
+        <h3>7-Day Temperature Trends</h3>
+        <canvas id="temperatureChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>Rain Probability</h3>
+        <canvas id="rainChart"></canvas>
+    </div>
+</section>
+    </main>
+
+    <footer>
+        <p>WeatherAI | AI-Powered Weather Tracking</p>
+        <p>Weather data: Open-Meteo</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
