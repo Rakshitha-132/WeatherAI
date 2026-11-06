@@ -1,8 +1,5 @@
 {
   "name": "weatherai",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "chart.js": "^4.6.1"
-  }
+  "private": true
 }

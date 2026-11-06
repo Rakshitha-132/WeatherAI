@@ -1,79 +1,164 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeatherAI - Smart Weather Tracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="description" content="A clear, friendly weather forecast for anywhere in the world. Check current conditions, a seven-day forecast, and helpful weather insights.">
+    <title>WeatherAI — A clearer view of your day</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-
-    <header>
-        <h1>🌦️ WeatherAI</h1>
-        <p>Smart Weather Tracking System</p>
+    <header class="site-header">
+        <a class="brand" href="./" aria-label="WeatherAI home">
+            <span class="brand-mark" aria-hidden="true">☀</span>
+            <span>weather<span class="brand-accent">ai</span></span>
+        </a>
+        <p class="header-note"><span class="live-dot" aria-hidden="true"></span> Your forecast, made clearer</p>
     </header>
 
-    <main>
-        <section class="search">
-            <input
-                type="text"
-                id="cityInput"
-                placeholder="Enter city name..."
-            >
-            <button id="searchBtn">Search</button>
-        </section>
+    <main class="page-shell">
+        <section class="hero" aria-labelledby="page-title">
+            <div class="hero-copy">
+                <p class="eyebrow">A LITTLE MORE SUNSHINE IN YOUR DAY</p>
+                <h1 id="page-title">Weather that<br><span>feels closer.</span></h1>
+                <p class="hero-description">The forecast for wherever life takes you.</p>
+            </div>
 
-        <p id="message">Search for a city to see its weather.</p>
-
-        <section id="weather" class="weather-card" hidden>
-            <h2 id="cityName"></h2>
-            <div id="weatherIcon">🌤️</div>
-            <h1 id="temperature"></h1>
-            <p id="description"></p>
-
-            <div class="details">
-                <div>
-                    <h3>Humidity</h3>
-                    <p id="humidity"></p>
-                </div>
-                <div>
-                    <h3>Wind Speed</h3>
-                    <p id="wind"></p>
-                </div>
-                <div>
-                    <h3>Feels Like</h3>
-                    <p id="feels"></p>
+            <div class="search-panel">
+                <form id="searchForm" class="search-form" role="search">
+                    <label class="sr-only" for="cityInput">Search for a city</label>
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <input
+                        id="cityInput"
+                        name="city"
+                        type="search"
+                        placeholder="Search any city..."
+                        autocomplete="off"
+                        maxlength="100"
+                        required
+                    >
+                    <button id="searchBtn" class="button button-primary" type="submit">
+                        <span>Search</span><span aria-hidden="true">→</span>
+                    </button>
+                </form>
+                <button id="locationSyncBtn" class="location-button" type="button">
+                    <span aria-hidden="true">◎</span> Use my location
+                </button>
+                <div id="placeChoices" class="place-choices" aria-label="Matching locations" hidden></div>
+                <div class="quick-searches" aria-label="Popular cities">
+                    <span>Try</span>
+                    <button type="button" class="quick-city" data-city="London">London</button>
+                    <button type="button" class="quick-city" data-city="Tokyo">Tokyo</button>
+                    <button type="button" class="quick-city" data-city="New York">New York</button>
+                    <button type="button" class="quick-city" data-city="Sydney">Sydney</button>
                 </div>
             </div>
         </section>
 
-        <section id="forecastSection" hidden>
-            <h2>7-Day Forecast</h2>
-            <div id="forecast" class="forecast"></div>
+        <p id="message" class="status-message" role="status" aria-live="polite">
+            Choose a city or use your location to see the forecast.
+        </p>
+
+        <section id="weatherDashboard" class="dashboard" aria-label="Weather dashboard" hidden>
+            <article id="weather" class="current-card">
+                <div class="current-topline">
+                    <div>
+                        <p class="card-kicker">RIGHT NOW</p>
+                        <h2 id="cityName" class="city-name"></h2>
+                        <p id="localDate" class="local-date"></p>
+                    </div>
+                    <div class="unit-toggle" role="group" aria-label="Temperature units">
+                        <button class="unit-button is-active" data-unit="c" type="button" aria-pressed="true">°C</button>
+                        <button class="unit-button" data-unit="f" type="button" aria-pressed="false">°F</button>
+                    </div>
+                </div>
+
+                <div class="current-condition">
+                    <div class="condition-art" aria-hidden="true">
+                        <span id="weatherIcon" class="weather-icon"></span>
+                    </div>
+                    <div class="temperature-block">
+                        <p id="temperature" class="temperature"></p>
+                        <p id="description" class="condition-description"></p>
+                        <p class="high-low">H:<span id="todayHigh"></span><span class="high-low-divider">/</span>L:<span id="todayLow"></span></p>
+                    </div>
+                </div>
+
+                <div class="current-divider"></div>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <span class="metric-icon" aria-hidden="true">◌</span>
+                        <div><p class="metric-label">Feels like</p><p id="feels" class="metric-value"></p></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon" aria-hidden="true">◉</span>
+                        <div><p class="metric-label">Humidity</p><p id="humidity" class="metric-value"></p></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon" aria-hidden="true">≋</span>
+                        <div><p class="metric-label">Wind</p><p id="wind" class="metric-value"></p></div>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-icon" aria-hidden="true">⌁</span>
+                        <div><p class="metric-label">UV index</p><p id="uvIndex" class="metric-value"></p></div>
+                    </div>
+                </div>
+            </article>
+
+            <section id="forecastSection" class="panel forecast-panel" aria-labelledby="forecastTitle">
+                <div class="section-heading">
+                    <div><p class="card-kicker">PLAN AHEAD</p><h2 id="forecastTitle">The next 7 days</h2></div>
+                    <span class="heading-icon" aria-hidden="true">↗</span>
+                </div>
+                <div id="forecast" class="forecast-list"></div>
+            </section>
+
+            <section class="panel insights-panel" aria-labelledby="insightsTitle">
+                <div class="section-heading">
+                    <div><p class="card-kicker">A LITTLE FORECAST WISDOM</p><h2 id="insightsTitle">Weather insights</h2></div>
+                    <span class="insights-sparkle" aria-hidden="true">✳</span>
+                </div>
+                <p class="panel-intro">Helpful notes based on the forecast for your area.</p>
+                <div id="insights" class="insights-list"></div>
+                <p class="insights-note">These tips are generated from the forecast data, not a medical or safety advisory.</p>
+            </section>
+
+            <section id="analytics" class="panel analytics-panel" aria-labelledby="analyticsTitle">
+                <div class="section-heading">
+                    <div><p class="card-kicker">THE WEEK AT A GLANCE</p><h2 id="analyticsTitle">Forecast trends</h2></div>
+                    <span class="heading-icon" aria-hidden="true">⌁</span>
+                </div>
+                <div class="trend-grid">
+                    <div class="trend-card">
+                        <div class="trend-heading"><h3>Temperature</h3><span>High / low</span></div>
+                        <div id="temperatureChart" class="trend-list" aria-label="Daily high and low temperatures"></div>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-heading"><h3>Chance of rain</h3><span>Daily maximum</span></div>
+                        <div id="rainChart" class="trend-list" aria-label="Daily chance of rain"></div>
+                    </div>
+                </div>
+                <div class="chart-legend"><span><i class="legend-dot high-dot"></i>High</span><span><i class="legend-dot low-dot"></i>Low</span><span><i class="legend-dot rain-dot"></i>Rain</span></div>
+            </section>
+
+            <p class="data-note">Forecast data by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>. Location names by <a href="https://www.bigdatacloud.com/" target="_blank" rel="noopener noreferrer">BigDataCloud</a>.</p>
         </section>
-        
-<section id="analytics" hidden>
-    <h2>📊 Weather Analytics</h2>
 
-    <div class="chart-card">
-        <h3>7-Day Temperature Trends</h3>
-        <canvas id="temperatureChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-        <h3>Rain Probability</h3>
-        <canvas id="rainChart"></canvas>
-    </div>
-</section>
+        <section id="welcomeCard" class="welcome-card" aria-label="Welcome">
+            <div class="welcome-art" aria-hidden="true"><span>☀</span><i></i><b></b></div>
+            <p class="card-kicker">YOUR DAY, IN THE KNOW</p>
+            <h2>A better day starts<br>with a better forecast.</h2>
+            <p>Search for a place to see what the sky has in store, from right-now conditions to the week ahead.</p>
+        </section>
     </main>
 
-    <footer>
-        <p>WeatherAI | AI-Powered Weather Tracking</p>
-        <p>Weather data: Open-Meteo</p>
+    <footer class="site-footer">
+        <a class="brand footer-brand" href="./"><span class="brand-mark" aria-hidden="true">☀</span><span>weather<span class="brand-accent">ai</span></span></a>
+        <p>Made for wherever your day takes you.</p>
+        <p class="privacy-note">Location is only used on request; coordinates go to weather services to get your forecast.</p>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
